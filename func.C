@@ -277,7 +277,7 @@ void simpop(dataset * data, param * params, int j){
     
     // calculate/simulate dp by selection and drift for each SNP
     for(i=0; i<data->nLoci; i++){
-      if( gsl_vector_get(params->beta, i) != 0){ // SNP has effect on trait
+      if( (gsl_vector_get(params->beta, i) != 0) && (gsl_matrix_get(params->pp, i, j * data->nGens + k) < 0.999) && (gsl_matrix_get(params->pp, i, j * data->nGens + k) > 0.001)){ // SNP has effect an effect and is variable
 	
 	si = gsl_vector_get(params->beta, i) * (S/data->sigma2); // from L&W 5.21
 	// note that this is an approximation; this is a good approximation when z ~ N
@@ -449,5 +449,8 @@ void writesim(dataset * data, param * params, FILE * OUT, int ss){
       fprintf(OUT,"\n");
     }
 
+  }
+  else{
+      fprintf(OUT,"\n");
   }
 }
